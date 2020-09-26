@@ -35,7 +35,7 @@ public class Transaction implements Serializable {
     @JoinColumn(nullable = false)
     User user;  //main entity
 
-    Float amount;
+    Float amount, charges;
 
     @CreationTimestamp
     Date creationTimestamp;

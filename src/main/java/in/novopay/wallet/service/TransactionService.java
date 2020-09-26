@@ -48,4 +48,17 @@ public class TransactionService {
             return ResponseEntity.badRequest().body(e);
         }
     }
+
+    public ResponseEntity<?> computeCharges(String transactionId) {
+        try {
+            Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new NotFoundException(transactionId));
+            Float charges = Float.valueOf(String.format("%.2f", transaction.getAmount() * 0.002 + transaction.getAmount() * 0.0005));
+            transaction.setCharges(charges);
+            return ResponseEntity.ok(transaction);
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
 }

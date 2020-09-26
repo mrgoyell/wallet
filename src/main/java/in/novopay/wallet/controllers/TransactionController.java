@@ -21,4 +21,9 @@ public class TransactionController {
     public ResponseEntity<?> transactionReversal(@PathVariable String transactionId){
         return transactionService.transactionReversal(transactionId);
     }
+
+    @GetMapping("/{transactionId}/computeCharges")
+    public ResponseEntity<?> computeCharges(@PathVariable String transactionId){
+        return transactionService.computeCharges(transactionId);
+    }
 }

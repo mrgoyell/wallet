@@ -29,4 +29,5 @@ public class WalletController {
         return walletService.transferMoney(userId,receiverId,amount);
     }
 
+
 }
