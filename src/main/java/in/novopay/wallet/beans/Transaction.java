@@ -1,5 +1,7 @@
 package in.novopay.wallet.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import in.novopay.wallet.enums.TransactionStatus;
 import in.novopay.wallet.enums.TransactionType;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,11 +9,12 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
-public class Transaction {
+public class Transaction implements Serializable {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -22,16 +25,23 @@ public class Transaction {
     @Column(nullable = false)
     TransactionType type;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    User primary;  //main entity
+    @Column(nullable = false)
+    TransactionStatus status;
 
     @ManyToOne
-    User secondary; //only applicable in case of transfers
+    @JoinColumn(nullable = false)
+    @JsonIgnore
+    User user;  //main entity
 
     @CreationTimestamp
     Date creationTimestamp;
 
     @UpdateTimestamp
     Date updationTimestamp;
+
+    public Transaction(TransactionType type, User user) {
+        this.type = type;
+        this.user = user;
+        this.status = TransactionStatus.INCOMPLETE;
+    }
 }
