@@ -16,4 +16,9 @@ public class WalletController {
     public ResponseEntity<?> addMoney(@PathVariable String userId, @RequestParam Float amount){
         return walletService.addMoney(userId,amount);
     }
+
+    @PutMapping("/{userId}/transfer")
+    public ResponseEntity<?> transferMoney(@PathVariable String userId, @RequestParam String receiverId, Float amount){
+        return walletService.transferMoney(userId,receiverId,amount);
+    }
 }

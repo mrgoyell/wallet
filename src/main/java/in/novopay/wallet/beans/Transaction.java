@@ -30,7 +30,6 @@ public class Transaction implements Serializable {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @JsonIgnore
     User user;  //main entity
 
     @CreationTimestamp
