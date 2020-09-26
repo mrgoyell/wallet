@@ -16,4 +16,9 @@ public class TransactionController {
     public ResponseEntity<?> getTransactionStatus(@PathVariable String transactionId){
         return transactionService.getTransactionStatus(transactionId);
     }
+
+    @PutMapping("/{transactionId}/reversal")
+    public ResponseEntity<?> transactionReversal(@PathVariable String transactionId){
+        return transactionService.transactionReversal(transactionId);
+    }
 }

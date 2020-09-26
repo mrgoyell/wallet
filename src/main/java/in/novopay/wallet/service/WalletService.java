@@ -1,5 +1,5 @@
 package in.novopay.wallet.service;
-import in.novopay.wallet.Exceptions.UserNotFoundException;
+import in.novopay.wallet.Exceptions.NotFoundException;
 import in.novopay.wallet.beans.Transaction;
 import in.novopay.wallet.beans.User;
 import in.novopay.wallet.enums.TransactionStatus;
@@ -28,14 +28,14 @@ public class WalletService {
         User user = null;
         Transaction transaction = null;
         try {
-            user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+            user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
             transaction = transact(TransactionType.CREDIT,user,amount);
             responseEntity = ResponseEntity.ok(transaction);
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             responseEntity = ResponseEntity.notFound().build();
         } catch (Exception e) {
             if (transaction == null)
-                transaction = new Transaction(TransactionType.CREDIT, user);
+                transaction = new Transaction(TransactionType.CREDIT, user, amount);
             transaction.setStatus(TransactionStatus.DECLINED);
             transactionRepository.save(transaction);
             responseEntity = ResponseEntity.badRequest().body(transaction);
@@ -49,17 +49,17 @@ public class WalletService {
         User user = null;
         Transaction transaction = null;
         try {
-            user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(userId));
-            User receiver = userRepository.findById(receiverId).orElseThrow(()->new UserNotFoundException(receiverId));
+            user = userRepository.findById(userId).orElseThrow(()-> new NotFoundException(userId));
+            User receiver = userRepository.findById(receiverId).orElseThrow(()->new NotFoundException(receiverId));
             transaction = transact(TransactionType.DEBIT,user,-amount);
             transact(TransactionType.CREDIT,receiver,amount);
             responseEntity = ResponseEntity.ok(transaction);
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             responseEntity = ResponseEntity.notFound().build();
         }
         catch (Exception e) {
             if (transaction == null)
-                transaction = new Transaction(TransactionType.DEBIT, user);
+                transaction = new Transaction(TransactionType.DEBIT, user, amount);
             transaction.setStatus(TransactionStatus.DECLINED);
             transactionRepository.save(transaction);
             responseEntity = ResponseEntity.badRequest().body(transaction);
@@ -68,14 +68,14 @@ public class WalletService {
     }
 
     private Transaction transact(TransactionType transactionType, User user, float amount) throws Exception {
-        Transaction transaction = new Transaction(transactionType, user);
+        Transaction transaction = new Transaction(transactionType, user, amount);
         transaction = transactionRepository.saveAndFlush(transaction);
         updateWallet(user, amount);
         transaction.setStatus(TransactionStatus.COMPLETE);
         return transaction;
     }
 
-    private void updateWallet(User user, float amount) throws Exception {
+     void updateWallet(User user, float amount) throws Exception {
         float walletAmount = user.getWallet();
         walletAmount += amount;
         if(walletAmount<0)
@@ -86,10 +86,10 @@ public class WalletService {
     public ResponseEntity<?> getUserTransactions(String userId) {
         ResponseEntity responseEntity;
         try {
-            User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(userId));
+            User user = userRepository.findById(userId).orElseThrow(()->new NotFoundException(userId));
             List<Transaction> transactions = transactionRepository.findByUser(user);
             responseEntity = ResponseEntity.ok(transactions);
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             responseEntity = ResponseEntity.notFound().build();
         }
 

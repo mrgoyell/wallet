@@ -2,14 +2,14 @@ package in.novopay.wallet.Exceptions;
 
 import java.util.function.Supplier;
 
-public class UserNotFoundException extends Exception{
+public class NotFoundException extends Exception{
     String message;
-    public UserNotFoundException(String message) {
+    public NotFoundException(String message) {
         this.message = message;
     }
 
     @Override
     public String toString(){
-        return "User not found for: "+message;
+        return "Not found for: "+message;
     }
 }

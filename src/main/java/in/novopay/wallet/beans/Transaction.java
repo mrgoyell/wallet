@@ -35,15 +35,18 @@ public class Transaction implements Serializable {
     @JoinColumn(nullable = false)
     User user;  //main entity
 
+    Float amount;
+
     @CreationTimestamp
     Date creationTimestamp;
 
     @UpdateTimestamp
     Date updationTimestamp;
 
-    public Transaction(TransactionType type, User user) {
+    public Transaction(TransactionType type, User user, float amount) {
         this.type = type;
         this.user = user;
         this.status = TransactionStatus.INCOMPLETE;
+        this.amount = amount;
     }
 }
