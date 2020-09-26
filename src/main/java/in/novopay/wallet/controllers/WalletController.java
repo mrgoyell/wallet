@@ -14,6 +14,11 @@ public class WalletController {
     @Autowired
     WalletService walletService;
 
+    @GetMapping("/{userId}/transactions")
+    public ResponseEntity<?> getUserTransactions(@PathVariable String userId){
+        return walletService.getUserTransactions(userId);
+    }
+
     @PutMapping("/{userId}/add")
     public ResponseEntity<?> addMoney(@PathVariable String userId, @RequestParam Float amount){
         return walletService.addMoney(userId,amount);

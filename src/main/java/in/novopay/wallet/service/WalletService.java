@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class WalletService {
@@ -21,12 +22,11 @@ public class WalletService {
     @Autowired
     UserRepository userRepository;
 
-    Transaction transaction;
-
     @Transactional
     public ResponseEntity<?> addMoney(String userId, Float amount) {
         ResponseEntity responseEntity;
         User user = null;
+        Transaction transaction = null;
         try {
             user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
             transaction = transact(TransactionType.CREDIT,user,amount);
@@ -47,6 +47,7 @@ public class WalletService {
     public ResponseEntity<?> transferMoney(String userId, String receiverId, Float amount) {
         ResponseEntity responseEntity;
         User user = null;
+        Transaction transaction = null;
         try {
             user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(userId));
             User receiver = userRepository.findById(receiverId).orElseThrow(()->new UserNotFoundException(receiverId));
@@ -68,7 +69,7 @@ public class WalletService {
 
     private Transaction transact(TransactionType transactionType, User user, float amount) throws Exception {
         Transaction transaction = new Transaction(transactionType, user);
-        transaction = transactionRepository.save(transaction);
+        transaction = transactionRepository.saveAndFlush(transaction);
         updateWallet(user, amount);
         transaction.setStatus(TransactionStatus.COMPLETE);
         return transaction;
@@ -80,5 +81,18 @@ public class WalletService {
         if(walletAmount<0)
             throw new Exception("Not enough balance"+user.getWallet());
         user.setWallet(walletAmount);
+    }
+
+    public ResponseEntity<?> getUserTransactions(String userId) {
+        ResponseEntity responseEntity;
+        try {
+            User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(userId));
+            List<Transaction> transactions = transactionRepository.findByUser(user);
+            responseEntity = ResponseEntity.ok(transactions);
+        } catch (UserNotFoundException e) {
+            responseEntity = ResponseEntity.notFound().build();
+        }
+
+        return responseEntity;
     }
 }
