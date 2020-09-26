@@ -1,10 +1,13 @@
 package in.novopay.wallet.beans;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Data
@@ -27,4 +30,10 @@ public class User {
 
     String password;
     float wallet;
+
+    @CreationTimestamp
+    Date creationTimestamp;
+
+    @UpdateTimestamp
+    Date updationTimestamp;
 }
