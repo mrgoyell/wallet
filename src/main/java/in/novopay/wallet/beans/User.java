@@ -26,7 +26,6 @@ public class User implements Serializable {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(length = 50)
-    @JsonProperty("transaction_id")
     String id;
 
     String name;

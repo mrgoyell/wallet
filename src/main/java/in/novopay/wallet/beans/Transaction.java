@@ -1,6 +1,6 @@
 package in.novopay.wallet.beans;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import in.novopay.wallet.enums.TransactionStatus;
 import in.novopay.wallet.enums.TransactionType;
 import lombok.Data;
@@ -22,6 +22,7 @@ public class Transaction implements Serializable {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(length = 50)
+    @JsonProperty("transaction_id")
     String id;
 
     @Column(nullable = false)
