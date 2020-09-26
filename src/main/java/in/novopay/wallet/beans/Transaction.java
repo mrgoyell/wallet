@@ -23,7 +23,7 @@ public class Transaction {
     TransactionType type;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     User primary;  //main entity
 
     @ManyToOne
