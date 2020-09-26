@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import in.novopay.wallet.enums.TransactionStatus;
 import in.novopay.wallet.enums.TransactionType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,6 +15,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Transaction implements Serializable {
 
     @Id

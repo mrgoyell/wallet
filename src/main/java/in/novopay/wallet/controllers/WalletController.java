@@ -1,5 +1,7 @@
 package in.novopay.wallet.controllers;
 
+import in.novopay.wallet.beans.Transaction;
+import in.novopay.wallet.service.TransactionService;
 import in.novopay.wallet.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,4 +23,5 @@ public class WalletController {
     public ResponseEntity<?> transferMoney(@PathVariable String userId, @RequestParam String receiverId, Float amount){
         return walletService.transferMoney(userId,receiverId,amount);
     }
+
 }
